@@ -6,9 +6,7 @@ theme: cosmo
 ---
 
 # Introduction
-
-In this assignment, you will create interactive charts using **Vega-Lite** inside a **Quarto document** with ObservableJS chunks.
-Complete all sections and provide brief explanations for each chart.
+In this assignment, you will create interactive charts using **Vega-Lite** inside a **Quarto document** with ObservableJS chunks. Complete all sections and provide brief explanations for each chart.
 
 ```{ojs}
 // This sets up observable JS
@@ -16,9 +14,7 @@ import {vl} from "@observablehq/vega-lite"
 ```
 
 ## Setting Up
-
-For this lab, we'll use the XKCD Color survey data.
-The TidyTuesday documentation is available [here](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-08/readme.md).
+For this lab, we'll use the XKCD Color survey data. The TidyTuesday documentation is available [here](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-08/readme.md).
 
 Observable does best with data that's local, so we'll read the CSVs into R objects and write them out to local CSVs (yes, we could just download them... but this gives you the chance to do an exploratory data analysis in R if you prefer.)
 
@@ -83,9 +79,7 @@ allColors = raw.map(d => {
 ```
 
 # Interactive Exploration
-
-I asked CoPilot to generate an observable plot that uses selectors to change the color space and saturation.
-I've modified its code to both fix errors and explain more things using comments. 
+I asked CoPilot to generate an observable plot that uses selectors to change the color space and saturation. I've modified its code to both fix errors and explain more things using comments. 
 
 It may help to bring up Wikipedia pages for [RGB](https://en.wikipedia.org/wiki/RGB_color_model) and [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color models. 
 
@@ -135,22 +129,15 @@ Plot.plot({
 ```
 
 ## Alternatives
-
 Can you think of a better way to display this data, potentially using similar selectors? Describe the changes you'd make. 
-
 > 
 
 Is your proposed graphic supported by vega-lite? Why or why not? (You can provide links to documentation/stackOverflow)
-
 > 
 
 
 ## Adding selectors
-
-Add a `maxSat2` selector that puts an upper bound on the saturation. 
-To ensure mathematical viability, your `maxSat2` selector should have a lower bound of `minSat2`.
-Wire your `maxSat2` selector to the plot, using the chunk below, which I've edited to use variables with `2` at the end to not conflict with the original chart. 
-
+Add a `maxSat2` selector that puts an upper bound on the saturation. To ensure mathematical viability, your `maxSat2` selector should have a lower bound of `minSat2`. Wire your `maxSat2` selector to the plot, using the chunk below, which I've edited to use variables with `2` at the end to not conflict with the original chart. 
 
 ```{ojs}
 // selector for color space -- changes plot axes
@@ -196,4 +183,3 @@ Plot.plot({
   caption: space === "HSL" ? "Hue vs. Lightness (filtered by min saturation)." : "Red vs. Green (still filtered by HSL saturation)."
 })
 ```
-
