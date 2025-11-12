@@ -1,23 +1,19 @@
 ---
 title: "Homework: Interactive Visualization with Vega-Lite"
-author: "Your Name"
+author: "Max Vitek"
 format: html
 theme: cosmo
 ---
 
 # Introduction
 In this assignment, you will create interactive charts using **Vega-Lite** inside a **Quarto document** with ObservableJS chunks. Complete all sections and provide brief explanations for each chart.
-
 ```{ojs}
 // This sets up observable JS
 import {vl} from "@observablehq/vega-lite"
 ```
 
 ## Setting Up
-For this lab, we'll use the XKCD Color survey data. The TidyTuesday documentation is available [here](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-08/readme.md).
-
-Observable does best with data that's local, so we'll read the CSVs into R objects and write them out to local CSVs (yes, we could just download them... but this gives you the chance to do an exploratory data analysis in R if you prefer.)
-
+For this lab, we'll use the XKCD Color survey data. The TidyTuesday documentation is available [here](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-07-08/readme.md). Observable does best with data that's local, so we'll read the CSVs into R objects and write them out to local CSVs (yes, we could just download them... but this gives you the chance to do an exploratory data analysis in R if you prefer.)
 ```{r}
 answers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-08/answers.csv')
 color_ranks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-08/color_ranks.csv')
@@ -55,7 +51,6 @@ colors = raw.map(d => {
   }
 }).filter(d => d.hex && !Number.isNaN(d.h) && !Number.isNaN(d.l))
 
-
 // Parse hex -> RGB/HSL and compute a hue family bucket
 allColors = raw.map(d => {
   const hex = d.hex?.trim();
@@ -79,16 +74,12 @@ allColors = raw.map(d => {
 ```
 
 # Interactive Exploration
-I asked CoPilot to generate an observable plot that uses selectors to change the color space and saturation. I've modified its code to both fix errors and explain more things using comments. 
-
-It may help to bring up Wikipedia pages for [RGB](https://en.wikipedia.org/wiki/RGB_color_model) and [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color models. 
-
+I asked CoPilot to generate an observable plot that uses selectors to change the color space and saturation. I've modified its code to both fix errors and explain more things using comments. It may help to bring up Wikipedia pages for [RGB](https://en.wikipedia.org/wiki/RGB_color_model) and [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color models. 
 ```{ojs}
 // selector for color space -- changes plot axes
 viewof space = Inputs.select(["HSL", "RGB"], {label: "Color space (axes)", value: "HSL"})
 // selector for color saturation/intensity
 viewof minSat = Inputs.range([0, 100], {label: "Min saturation (%)", value: 0, step: 1})
-
 
 // filter out points based on saturation
 filtered = colors.filter(d => d.s >= minSat)
@@ -130,21 +121,19 @@ Plot.plot({
 
 ## Alternatives
 Can you think of a better way to display this data, potentially using similar selectors? Describe the changes you'd make. 
-> 
+  A better approach would be to display both color spaces simultaneously using linked dual views. I create two sidebyside scatter plots. One has one showing Hue vs. Lightness (HSL) and another showing Red vs. Green (RGB). Both plots would respond to the same saturation filters and use the same color encoding. 
+  I can aslo consider doing a interactive feature where clicking in one view highlights the corresponding colors in the other view or potentially a togle. This would help users understand how colors map between the two coordinate systems without losing context when switching. 
 
 Is your proposed graphic supported by vega-lite? Why or why not? (You can provide links to documentation/stackOverflow)
-> 
-
+  This design has mixed support in Vega-Lite. The side-by-side layout is fully supported using horizontal concatenation (hconcat), which allows independent views to be placed next to each other as a dashboard. Each view can have its own encoding and scales while sharing the same underlying dataset. You can create an interval or point selection in one view and reference it in another view by name (Tableau!). However, selections in concatenated views are independent by default. To share selections across views, you mustactivate it at at the top level and explicitly bind the parameters.
 
 ## Adding selectors
 Add a `maxSat2` selector that puts an upper bound on the saturation. To ensure mathematical viability, your `maxSat2` selector should have a lower bound of `minSat2`. Wire your `maxSat2` selector to the plot, using the chunk below, which I've edited to use variables with `2` at the end to not conflict with the original chart. 
-
 ```{ojs}
 // selector for color space -- changes plot axes
 viewof space2 = Inputs.select(["HSL", "RGB"], {label: "Color space (axes)", value: "HSL"})
 // selector for color saturation/intensity
 viewof minSat2 = Inputs.range([0, 100], {label: "Min saturation (%)", value: 0, step: 1})
-
 
 // filter out points based on saturation
 filtered2 = colors.filter(d => d.s >= minSat2)
